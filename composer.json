@@ -5,7 +5,7 @@
     "prefer-stable": true,
     "name": "grafmen9999/guestbook",
     "require": {
-        "php": "^7.4",
+        "php": "~7.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "symfony/console": "5.2.*",
