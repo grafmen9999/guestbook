@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Conference;
@@ -24,20 +26,17 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/", name="homepage")
      *
-     * @param ConferenceRepository $conferenceRepository
      * @return Response
      *
      * @throws Throwable
      */
-    public function index(ConferenceRepository $conferenceRepository): Response
+    public function index(): Response
     {
-        return new Response($this->twig->render('conference/index.html.twig', [
-            'conferences' => $conferenceRepository->findAll(),
-        ]));
+        return new Response($this->twig->render('conference/index.html.twig'));
     }
 
     /**
-     * @Route("/conference/{id}", name="conference", requirements={"id"="\d+"})
+     * @Route("/conference/{slug}", name="conference")
      *
      * @param Request $request
      * @param Conference $conference
