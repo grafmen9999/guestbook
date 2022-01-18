@@ -36,12 +36,20 @@ class AppFixtures extends Fixture
             ->setIsInternational(false);
         $manager->persist($paris);
 
-        $comment = (new Comment())
+        $comment1 = (new Comment())
             ->setConference($amsterdam)
             ->setAuthor('Fabien')
             ->setEmail('fabien@example.com')
-            ->setText('This was a great conference.');
-        $manager->persist($comment);
+            ->setText('This was a great conference.')
+            ->setState('published');
+        $manager->persist($comment1);
+
+        $comment2 = (new Comment())
+            ->setConference($amsterdam)
+            ->setAuthor('Lucas')
+            ->setEmail('lucas@example.com')
+            ->setText('I think this one is going to be moderated.');
+        $manager->persist($comment2);
 
         $admin = (new Admin())
             ->setRoles(['ROLE_ADMIN'])
