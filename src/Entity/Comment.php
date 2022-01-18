@@ -116,7 +116,7 @@ class Comment
      */
     public function setCreatedAtValue(): void
     {
-        $this->createdAt = new DateTime();
+        $this->setCreatedAt(new DateTime());
     }
 
     public function getConference(): ?Conference
