@@ -9,6 +9,7 @@ use App\Entity\Conference;
 use App\Form\CommentFormType;
 use App\Message\CommentMessage;
 use App\Repository\CommentRepository;
+use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,22 +40,30 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/", name="homepage")
      *
+     * @param ConferenceRepository $conferenceRepository
+     *
      * @return Response
      *
-     * @throws Throwable
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function index(): Response
+    public function index(ConferenceRepository $conferenceRepository): Response
     {
-        return new Response($this->twig->render('conference/index.html.twig'));
+        $response = new Response($this->twig->render('conference/index.html.twig'));
+
+        $response->setSharedMaxAge(3600);
+
+        return $response;
     }
 
     /**
      * @Route("/conference/{slug}", name="conference")
      *
-     * @param Request $request
-     * @param Conference $conference
+     * @param Request           $request
+     * @param Conference        $conference
      * @param CommentRepository $commentRepository
-     * @param string $photoDir
+     * @param string            $photoDir
      * @return Response
      *
      * @throws LoaderError
@@ -80,7 +89,6 @@ class ConferenceController extends AbstractController
                 try {
                     $photo->move($photoDir, $filename);
                 } catch (FileException $e) {
-
                 }
                 $comment->setPhotoFilename($filename);
             }
@@ -103,12 +111,44 @@ class ConferenceController extends AbstractController
         $offset = max(0, $request->query->getInt('offset'));
         $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
-        return new Response($this->twig->render('conference/show.html.twig', [
-            'conference' => $conference,
-            'comments' => $paginator,
-            'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
-            'comment_form' => $form->createView(),
-        ]));
+        return new Response(
+            $this->twig->render(
+                'conference/show.html.twig',
+                [
+                    'conference' => $conference,
+                    'comments' => $paginator,
+                    'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
+                    'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
+                    'comment_form' => $form->createView(),
+                ]
+            )
+        );
+    }
+
+    /**
+     * @Route("/conference_header", name="conference_header")
+     *
+     * @param ConferenceRepository $conferenceRepository
+     *
+     * @return Response
+     *
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
+    {
+        $response = new Response(
+            $this->twig->render(
+                'conference/header.html.twig',
+                [
+                    'conferences' => $conferenceRepository->findAll(),
+                ]
+            )
+        );
+
+        $response->setSharedMaxAge(3600);
+
+        return $response;
     }
 }
