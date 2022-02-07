@@ -14,9 +14,9 @@ class ImageOptimizer
 
     private Imagine $imagine;
 
-    public function __construct(Imagine $imagine)
+    public function __construct()
     {
-        $this->imagine = $imagine;
+        $this->imagine = new Imagine();
     }
 
     public function resize(string $filename): void
