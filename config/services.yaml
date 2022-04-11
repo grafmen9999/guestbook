@@ -7,6 +7,8 @@ parameters:
     default_admin_email: admin@example.com
     default_domain: '127.0.0.1'
     default_scheme: 'http'
+    default_locale: 'en'
+    app.supported_locales: 'en|fr'
 
     router.request_context.host: "%env(default:default_domain:SYMFONY_DEFAULT_ROUTE_HOST)%"
     router.request_context.scheme: "%env(default:default_scheme:SYMFONY_DEFAULT_ROUTE_SCHEME)%"
@@ -20,6 +22,7 @@ services:
             $photoDir: "%kernel.project_dir%/public/uploads/photos"
             $akismetKey: "%env(AKISMET_KEY)%"
             $adminEmail: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
+            $defaultLocale: "%default_locale%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

@@ -22,7 +22,7 @@ class CommentRepository extends ServiceEntityRepository
 {
     private const DAYS_BEFORE_REJECTED_REMOVAL = 7;
 
-    public const PAGINATOR_PER_PAGE = 2;
+    public const PAGINATOR_PER_PAGE = 10;
 
     public function __construct(ManagerRegistry $registry)
     {

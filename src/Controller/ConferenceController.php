@@ -30,16 +30,32 @@ class ConferenceController extends AbstractController
     private Environment $twig;
     private EntityManagerInterface $entityManager;
     private MessageBusInterface $bus;
+    private string $defaultLocale;
 
-    public function __construct(Environment $twig, EntityManagerInterface $entityManager, MessageBusInterface $bus)
-    {
+    public function __construct(
+        Environment $twig,
+        EntityManagerInterface $entityManager,
+        MessageBusInterface $bus,
+        string $defaultLocale
+    ) {
         $this->twig = $twig;
         $this->entityManager = $entityManager;
         $this->bus = $bus;
+        $this->defaultLocale = $defaultLocale;
     }
 
     /**
-     * @Route("/", name="homepage")
+     * @Route("/")
+     *
+     * @return Response
+     */
+    public function indexNoLocale(): Response
+    {
+        return $this->redirectToRoute('homepage', ['_locale' => $this->defaultLocale]);
+    }
+
+    /**
+     * @Route("/{_locale<%app.supported_locales%>}/", name="homepage")
      *
      * @param ConferenceRepository $conferenceRepository
      *
@@ -66,7 +82,7 @@ class ConferenceController extends AbstractController
     }
 
     /**
-     * @Route("/conference/{slug}", name="conference")
+     * @Route("/{_locale<%app.supported_locales%>}/conference/{slug}", name="conference")
      *
      * @param Request           $request
      * @param Conference        $conference
@@ -156,7 +172,7 @@ class ConferenceController extends AbstractController
     }
 
     /**
-     * @Route("/conference_header", name="conference_header")
+     * @Route("/{_locale<%app.supported_locales%>}/conference_header", name="conference_header")
      *
      * @param ConferenceRepository $conferenceRepository
      *

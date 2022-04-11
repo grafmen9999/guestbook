@@ -58,7 +58,7 @@ class Comment
     private string $email;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
      * @Groups({"comment:list", "comment:item"})
      */
     private DateTimeInterface $createdAt;
